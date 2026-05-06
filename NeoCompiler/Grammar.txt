@@ -1,0 +1,46 @@
+# OwnCompiler Grammar Rules (EBNF-like)
+
+## 1. Program
+Program        -> Statement* EOF
+
+## 2. Statements
+Statement      -> VarDecl
+                | Assignment
+                | IfStatement
+                | WhileStatement
+                | ForStatement
+                | FunctionDecl
+                | ReturnStatement
+                | PrintStatement
+                | ClassDecl
+                | FunctionCall ';'
+
+## 3. Declarations
+VarDecl        -> Type ID ('=' Expression)? ';'
+Type           -> 'int' | 'float' | 'string' | 'bool' | ID
+
+FunctionDecl   -> 'func' Type ID '(' Parameters? ')' Block
+Parameters     -> Type ID (',' Type ID)*
+
+ClassDecl      -> 'class' ID Block
+
+## 4. Control Flow
+IfStatement    -> 'if' '(' Expression ')' Block ('else' Block)?
+WhileStatement -> 'while' '(' Expression ')' Block
+ForStatement   -> 'for' '(' VarDecl Expression ';' ID '=' Expression ')' Block
+Block          -> '{' Statement* '}'
+
+## 5. Expressions
+Expression     -> LogicalOr
+LogicalOr      -> LogicalAnd ( '||' LogicalAnd )*
+LogicalAnd     -> Equality ( '&&' Equality )*
+Equality       -> Comparison ( ('==' | '!=') Comparison )*
+Comparison     -> AddSub ( ('<' | '>' | '<=' | '>=') AddSub )*
+AddSub         -> MulDiv ( ('+' | '-') MulDiv )*
+MulDiv         -> Unary ( ('*' | '/') Unary )*
+Unary          -> ('!' | '-') Unary | Primary
+Primary        -> INTEGER | FLOAT | STRING | BOOL | ID | '(' Expression ')' 
+                | FunctionCall | 'new' ID '(' Arguments? ')'
+
+FunctionCall   -> ID '(' Arguments? ')'
+Arguments      -> Expression (',' Expression)*
